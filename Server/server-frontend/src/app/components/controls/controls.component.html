@@ -1,0 +1,28 @@
+<div class="controls-container">
+    <div class="time-unit-selector">
+      <mat-form-field appearance="fill">
+        <mat-label>Đơn vị thời gian</mat-label>
+        <mat-select [(ngModel)]="selectedTimeUnit" (selectionChange)="onTimeUnitChange()">
+          <mat-option *ngFor="let unit of timeUnits" [value]="unit.value">
+            {{ unit.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+    <div class="slider-container">
+      <label>Số lượng {{ getTimeUnitLabel() }}: {{ selectedValue }}</label>
+      <mat-slider 
+        min="1" 
+        [max]="maxValue" 
+        step="1" 
+        discrete
+        [displayWith]="displayFn">
+        <input matSliderThumb [(ngModel)]="selectedValue" (input)="onSliderChange($event)">
+      </mat-slider>
+    </div>
+    
+    <button mat-raised-button color="primary" (click)="refreshData()">
+      Cập nhật dữ liệu
+    </button>
+  </div>

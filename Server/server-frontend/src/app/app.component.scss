@@ -1,0 +1,48 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .content {
+      padding: 20px;
+      flex: 1;
+      
+      .data-boxes-container {
+        margin: 20px 0;
+        
+        .data-boxes-scroll {
+          display: flex;
+          overflow-x: auto;
+          padding-bottom: 10px;
+          scroll-behavior: smooth;
+          
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          &::-webkit-scrollbar {
+            height: 8px;
+          }
+          
+          &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+          }
+          
+          &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+          }
+          
+          &::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+          }
+        }
+      }
+    }
+  }

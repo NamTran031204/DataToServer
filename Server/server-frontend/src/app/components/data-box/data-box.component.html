@@ -1,0 +1,12 @@
+<div class="data-box">
+    <div class="timestamp">{{ formatTimestamp(data.timestamp) }}</div>
+    <div class="reading temperature">
+      <span class="label">Nhiệt độ:</span>
+      <span class="value">{{ data.temperature | number:'1.1-1' }}°C</span>
+    </div>
+    <div class="reading humidity">
+      <span class="label">Độ ẩm:</span>
+      <span class="value">{{ data.humidity | number:'1.1-1' }}%</span>
+    </div>
+    <div class="device-id">ID: {{ data.deviceId }}</div>
+  </div>

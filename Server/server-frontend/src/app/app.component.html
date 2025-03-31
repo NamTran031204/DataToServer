@@ -1,0 +1,20 @@
+<div class="app-container">
+    <mat-toolbar color="primary" class="header">
+      <span>{{ title }}</span>
+    </mat-toolbar>
+    
+    <div class="content">
+      <app-controls></app-controls>
+      
+      <div class="data-boxes-container">
+        <div class="data-boxes-scroll">
+          <app-data-box 
+            *ngFor="let data of sensorData" 
+            [data]="data">
+          </app-data-box>
+        </div>
+      </div>
+      
+      <app-chart></app-chart>
+    </div>
+  </div>

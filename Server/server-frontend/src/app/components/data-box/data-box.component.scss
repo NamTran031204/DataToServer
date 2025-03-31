@@ -1,0 +1,45 @@
+.data-box {
+    min-width: 200px;
+    height: 150px;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    .timestamp {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    
+    .reading {
+      margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      
+      .label {
+        font-weight: 500;
+      }
+      
+      &.temperature .value {
+        color: #e74c3c;
+        font-weight: 600;
+      }
+      
+      &.humidity .value {
+        color: #3498db;
+        font-weight: 600;
+      }
+    }
+    
+    .device-id {
+      font-size: 0.8rem;
+      color: #999;
+      text-align: right;
+      margin-top: 5px;
+    }
+  }

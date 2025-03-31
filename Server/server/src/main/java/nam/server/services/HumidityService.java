@@ -3,7 +3,6 @@ package nam.server.services;
 import lombok.RequiredArgsConstructor;
 import nam.server.dtos.DataDTO;
 import nam.server.models.Humidity;
-import nam.server.models.Temperature;
 import nam.server.repositories.HumidityRepository;
 import org.springframework.stereotype.Service;
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface TemperatureRepository extends JpaRepository<Temperature, Long> {
     Optional<Temperature> findById(int id);
 
-    @Query(value = "SELECT * FROM temperatures t ORDER BY id LIMIT :numberOfSample", nativeQuery = true)
+    @Query(value = "SELECT * FROM temperatures t ORDER BY id DESC LIMIT :numberOfSample", nativeQuery = true)
     List<Temperature> getAllTemperature(@Param("numberOfSample") long numberOfSample);
 
 }

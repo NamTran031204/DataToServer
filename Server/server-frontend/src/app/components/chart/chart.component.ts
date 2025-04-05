@@ -115,20 +115,15 @@ export class ChartComponent implements OnInit, OnDestroy {
   private updateChartData(data: SensorData[]): void {
     if (!data || data.length === 0) return;
     
-    // Sort by timestamp
-    const sortedData = [...data].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-    );
-    
-    // Extract data for chart
-    const timestamps = sortedData.map(item => {
+    // extract data for chart
+    const timestamps = data.map(item => {
       const date = new Date(item.timestamp);
       return date.toLocaleTimeString() + '\n' + date.toLocaleDateString();
     });
-    const temperatures = sortedData.map(item => item.temperature);
-    const humidities = sortedData.map(item => item.humidity);
+    const temperatures = data.map(item => item.temperature);
+    const humidities = data.map(item => item.humidity);
     
-    // Update chart
+    // update chart
     this.lineChartData.labels = timestamps;
     this.lineChartData.datasets[0].data = temperatures;
     this.lineChartData.datasets[1].data = humidities;

@@ -21,7 +21,6 @@ export class SensorService {
       switchMap(() => this.fetchData())
     ).subscribe();
     
-    // Initial data fetch
     this.fetchData().subscribe();
   }
   
@@ -49,41 +48,37 @@ export class SensorService {
     const temperatureData$ = this.http.get<any[]>(`${this.baseUrl}/temperature/${numberOfSample}`).pipe(
       catchError(error => {
         console.error('Error fetching temperature data', error);
-        return []; // Trả về mảng rỗng nếu có lỗi
+        return []; //trả về mảng rỗng nếu có lỗi
       })
     );
 
     const humidityData$ = this.http.get<any[]>(`${this.baseUrl}/humidity/${numberOfSample}`).pipe(
       catchError(error => {
         console.error('Error fetching humidity data', error);
-        return []; // Trả về mảng rỗng nếu có lỗi
+        return []; //trả về mảng rỗng nếu có lỗi
       })
     );
 
-    debugger;
-
     return forkJoin([temperatureData$, humidityData$]).pipe(
       map(([tempData, humidData]) => {
-        // Tạo maps cho dữ liệu nhiệt độ và độ ẩm với key là collectedTime
         const tempMap = new Map();
         const humidMap = new Map();
         
-        // Lưu tất cả các mốc thời gian (collectedTime) từ cả hai nguồn dữ liệu
+        // dùng lưu các collectedTime từ từ temp và humid
         const allTimestamps = new Set<string>();
         
-        // Lưu dữ liệu nhiệt độ vào map và thu thập tất cả mốc thời gian
-        tempData.forEach(item => {
+        for (let i = 0; i < tempData.length; i++) {
+          const item = tempData[i];
           tempMap.set(item.collectedTime, item);
           allTimestamps.add(item.collectedTime);
-        });
-        
-        // Lưu dữ liệu độ ẩm vào map và thu thập tất cả mốc thời gian
-        humidData.forEach(item => {
+        }
+        for (let i = 0; i < humidData.length; i++) {
+          const item = humidData[i];
           humidMap.set(item.collectedTime, item);
           allTimestamps.add(item.collectedTime);
-        });
+        }
 
-        // Tạo kết quả từ tất cả các mốc thời gian
+        // trả về mảng SensorData
         const result: SensorData[] = Array.from(allTimestamps).map(timestamp => {
           const tempItem = tempMap.get(timestamp);
           const humidItem = humidMap.get(timestamp);
@@ -96,13 +91,9 @@ export class SensorService {
           } as SensorData;
         });
       
-        // Sắp xếp kết quả theo thời gian (mới nhất trước)
         result.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         
-        // Cập nhật BehaviorSubject
         this.sensorData.next(result);
-        
-        // Console log để debug
         console.log('Combined data by timestamp:', result);
         
         return result;

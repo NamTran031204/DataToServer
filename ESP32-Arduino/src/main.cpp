@@ -6,23 +6,33 @@
 #include<string.h>
 #include<time.h>
 
+// #include <Firebase.h>
+#include <FirebaseESP32.h>
+#include "firebase.h"
+
 //wifi config
 const char* ssid = "NamChan";
-const char* password = "namDepZai123";
+const char* password = "namDepZai";
 
 //dht config
 #define DHTPin 12
 #define DHTTYPE DHT22
 
+// Firebase config
+FirebaseData fbdo;
+FirebaseConfig config;
+FirebaseAuth auth;
+bool signupOK = false;
+
 DHT dht(DHTPin, DHTTYPE); // khoi chay bang dht.begin
 
-//http url
-String baseApiUrl = "http://192.168.63.201:8088/api/v1/";
-String httpRequest(const char* url);
+// //http url
+// String baseApiUrl = "url";
+// String httpRequest(const char* url);
 
 //data
 struct Data
-{
+{ 
   float temp, humid;
   String deviceId = "ESP32";
   String timestamp;
@@ -37,6 +47,7 @@ String getISOTimestamp();
 
 void setup() {
   Serial.begin(115200);
+  delay(5000);
 
   dht.begin();
 
@@ -60,10 +71,29 @@ void setup() {
   } else {
     Serial.println(&timeInfor, "Current time: %Y-%m-%d %H:%M:%S");
   }
+
+  config.api_key = FirebaseAuthToken;
+  config.database_url = FirebaseHost;
+  config.timeout.serverResponse = 10000;
+
+  Serial.print("DEBUG: API Key from config: ");
+  Serial.printf("%s\n",config.api_key);
+  Serial.print("DEBUG: Database URL from config: ");
+  Serial.printf("%s\n", config.database_url);
+
+  if(Firebase.signUp(&config, &auth, "", "")){
+    Serial.println("firebase authentication OK");
+    signupOK = true;
+  }else{
+    Serial.printf("Firebase authentication failed: %s\n", config.signer.signupError.message.c_str());
+  }
+
+  Firebase.begin(&config, &auth);
+  Firebase.reconnectWiFi(true);
 }
 
 void loop() {
-  delay(60000); // gui 60s mot lan
+  
   float temp = dht.readTemperature();
   float humid = dht.readHumidity();
 
@@ -94,17 +124,38 @@ void loop() {
   Serial.print(F("Temperature: "));
   Serial.print(temp);
   Serial.println(" oC");
+  Serial.println(data.timestamp);
 
-  if(WiFi.status() == WL_CONNECTED){
-    String tempUrl = baseApiUrl + "/temperature";
-    String humidUrl = baseApiUrl + "/humidity";
+  // if(WiFi.status() == WL_CONNECTED){
+  //   String tempUrl = baseApiUrl + "temperature";
+  //   String humidUrl = baseApiUrl + "humidity";
 
-    String tempResponse = httpRequest(tempUrl.c_str());
-    String humidResponse = httpRequest(humidUrl.c_str());
+  //   String tempResponse = httpRequest(tempUrl.c_str());
+  //   String humidResponse = httpRequest(humidUrl.c_str());
 
-    Serial.println(tempResponse);
-    Serial.println(humidResponse);
+  //   Serial.println(tempResponse);
+  //   Serial.println(humidResponse);
+  // }
+
+  if(signupOK && Firebase.ready()){
+    FirebaseJson json;
+    json.set("temperature", data.temp);
+    json.set("humidity", data.humid);
+    json.set("deviceId", data.deviceId);
+    json.set("timestamp", data.timestamp);
+
+    String path = "/data-temp-humid";
+    if(Firebase.push(fbdo, path, json)){
+      Serial.println("Gửi dữ liệu thành công!");
+      Serial.print("Push ID: ");
+      Serial.println(fbdo.pushName());
+    }else{
+      Serial.print("Gửi dữ liệu thất bại, ");
+      Serial.println(fbdo.errorReason());
+    }
   }
+
+  delay(60000); // gui 60s mot lan
 
 }
 
@@ -122,31 +173,31 @@ String getISOTimestamp(){
   return String(timeString);
 }
 
-String httpRequest(const char* url){
-  HTTPClient http;
+// String httpRequest(const char* url){
+//   HTTPClient http;
 
-  http.begin(url);
-  http.addHeader("Content-Type", "application/json");
+//   http.begin(url);
+//   http.addHeader("Content-Type", "application/json");
 
-  String jsonBody = "{";
-  jsonBody += "\"temp\":" + String(data.temp) + ",";
-  jsonBody += "\"humid\":" + String(data.humid) + ",";
-  jsonBody += "\"deviceId\":\"" + data.deviceId + "\",";
-  jsonBody += "\"timestamp\":\"" + data.timestamp + "\"";
-  jsonBody += "}";
+//   String jsonBody = "{";
+//   jsonBody += "\"temp\":" + String(data.temp) + ",";
+//   jsonBody += "\"humid\":" + String(data.humid) + ",";
+//   jsonBody += "\"deviceId\":\"" + data.deviceId + "\",";
+//   jsonBody += "\"timestamp\":\"" + data.timestamp + "\"";
+//   jsonBody += "}";
 
-  int responseCode = http.POST(jsonBody);
-  String responseBody = "";
-  if(responseCode > 0){
-    Serial.print("HTTP response code: ");
-    Serial.println(responseCode);
-    responseBody = http.getString();
-  }else{
-    Serial.print("error on sending POST: ");
-    Serial.println(responseCode);
-  }
+//   int responseCode = http.POST(jsonBody);
+//   String responseBody = "";
+//   if(responseCode > 0){
+//     Serial.print("HTTP response code: ");
+//     Serial.println(responseCode);
+//     responseBody = http.getString();
+//   }else{
+//     Serial.print("error on sending POST: ");
+//     Serial.println(responseCode);
+//   }
 
-  http.end();
+//   http.end();
 
-  return responseBody;
-}
+//   return responseBody;
+// }

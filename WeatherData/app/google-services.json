@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "87620644187",
+    "firebase_url": "https://esp-32-bcc01-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "esp-32-bcc01",
+    "storage_bucket": "esp-32-bcc01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87620644187:android:9fe0488253dea41bcebe7e",
+        "android_client_info": {
+          "package_name": "com.nam.esp32"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy0_LiU_BosQWQk3HbL-MtHOWKogff84U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

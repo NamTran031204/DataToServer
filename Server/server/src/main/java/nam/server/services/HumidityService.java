@@ -38,6 +38,12 @@ public class HumidityService implements IHumidityService{
         return humidityRepository.getAllHumidity(numberOfSample);
     }
 
+//    @Override
+//    public Humidity getHumid() {
+//        return humidityRepository.getHumid()
+//                .orElseThrow(() -> new RuntimeException("khong tim thay du lieu do am"));
+//    }
+
     @Override
     public void deleteHumid(int id) {
         Humidity humidity = humidityRepository.findById(id)

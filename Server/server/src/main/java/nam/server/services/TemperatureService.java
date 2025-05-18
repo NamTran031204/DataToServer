@@ -41,6 +41,12 @@ public class TemperatureService implements ITemperatureService{
         return temperatureRepository.getAllTemperature(numberOfSample);
     }
 
+//    @Override
+//    public Temperature getTemp() {
+//        return temperatureRepository.getTemp()
+//                .orElseThrow(() -> new RuntimeException("khong tim thay du lieu nhiet do"));
+//    }
+
     @Override
     public void deleteTemp(int id) {
         Temperature temperature = temperatureRepository.findById(id)

@@ -1,5 +1,6 @@
 server:
   port: 8088
+  address: 0.0.0.0
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/Data?useSSL=false&serverTimezone=UTC

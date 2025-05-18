@@ -14,4 +14,6 @@ public interface TemperatureRepository extends JpaRepository<Temperature, Long> 
     @Query(value = "SELECT * FROM temperatures t ORDER BY id DESC LIMIT :numberOfSample", nativeQuery = true)
     List<Temperature> getAllTemperature(@Param("numberOfSample") long numberOfSample);
 
+//    @Query("SELECT t FROM temperature t ORDER BY id DESC LIMIT 1")
+//    Optional<Temperature> getTemp();
 }

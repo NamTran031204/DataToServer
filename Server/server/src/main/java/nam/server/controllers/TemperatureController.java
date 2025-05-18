@@ -36,12 +36,17 @@ public class TemperatureController {
     }
 
     @GetMapping("/{numberOfSample}")
-    public ResponseEntity<?> getTempData(
+    public ResponseEntity<?> getAllTempData(
             @PathVariable int numberOfSample
     ){
         List<Temperature> listOfTemp = temperatureService.getAllTemp(numberOfSample);
         return ResponseEntity.ok(listOfTemp);
     }
+
+//    @GetMapping("")
+//    public ResponseEntity<?> getTemp(){
+//        return ResponseEntity.ok("");
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTemp(

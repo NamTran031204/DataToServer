@@ -8,5 +8,6 @@ import java.util.List;
 public interface ITemperatureService {
     Temperature saveTemp(DataDTO dataDTO);
     List<Temperature> getAllTemp(int numberOfSample);
+//    Temperature getTemp();
     void deleteTemp(int id);
 }

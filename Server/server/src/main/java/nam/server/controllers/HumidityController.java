@@ -36,11 +36,16 @@ public class HumidityController {
     }
 
     @GetMapping("/{numberOfSample}")
-    public ResponseEntity<?> getHumid(
+    public ResponseEntity<?> getAllHumid(
             @PathVariable("numberOfSample") int numberOfSample
     ){
         return ResponseEntity.ok(humidityService.getAllHumid(numberOfSample));
     }
+
+//    @GetMapping("")
+//    public ResponseEntity<?> getHumid(){
+//        return ResponseEntity.ok("");
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteHumid(@PathVariable int id){

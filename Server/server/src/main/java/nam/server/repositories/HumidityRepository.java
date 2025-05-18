@@ -11,6 +11,9 @@ import java.util.Optional;
 public interface HumidityRepository extends JpaRepository<Humidity, Long> {
     Optional<Humidity> findById(int id);
 
-    @Query(value = "SELECT * FROM humidity ORDER BY id DESC LIMIT :numberOfSample", nativeQuery = true)
+    @Query(value = "SELECT * FROM humidity h ORDER BY id DESC LIMIT :numberOfSample", nativeQuery = true)
     List<Humidity> getAllHumidity(@Param("numberOfSample") long numberOfSample);
+
+//    @Query(value = "SELECT h FROM humidity h ORDER BY id DESC LIMIT 1", nativeQuery = true)
+//    Optional<Humidity> getHumid();
 }

@@ -15,7 +15,7 @@ const char* ssid = "NamChan";
 const char* password = "namDepZai";
 
 //dht config
-#define DHTPin 12
+#define DHTPin 16
 #define DHTTYPE DHT22
 
 // Firebase config
@@ -60,26 +60,28 @@ void setup() {
     Serial.print(".");
   }
   Serial.println("\nConnected to internet with IP address: ");
-  Serial.println(WiFi.localIP());
+  //Serial.println(WiFi.localIP());
 
   //time config
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
   struct tm timeInfor;
-  if(!getLocalTime(&timeInfor)){
-    Serial.println("Failed set time");
-  } else {
-    Serial.println(&timeInfor, "Current time: %Y-%m-%d %H:%M:%S");
+  while (!getLocalTime(&timeInfor)) 
+  {
+    Serial.println("Waiting for time sync...");
+    delay(1000);
   }
+  Serial.println(&timeInfor, "Current time: %Y-%m-%d %H:%M:%S");
+
 
   config.api_key = FirebaseAuthToken;
   config.database_url = FirebaseHost;
   config.timeout.serverResponse = 10000;
 
   Serial.print("DEBUG: API Key from config: ");
-  Serial.printf("%s\n",config.api_key);
+  Serial.printf("%s\n",config.api_key.c_str());
   Serial.print("DEBUG: Database URL from config: ");
-  Serial.printf("%s\n", config.database_url);
+  Serial.printf("%s\n", config.database_url.c_str());
 
   if(Firebase.signUp(&config, &auth, "", "")){
     Serial.println("firebase authentication OK");

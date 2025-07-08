@@ -24,9 +24,7 @@ class SensorViewModel(private val repository: SensorRepository) : ViewModel() {
         fetchData() // Lấy dữ liệu khi ViewModel được khởi tạo
     }
 
-    /**
-     * Lấy dữ liệu từ repository và thiết lập listener cho dữ liệu mới nhất
-     */
+    //Lấy dữ liệu từ repository và thiết lập listener cho dữ liệu mới nhất
     fun fetchData() {
         viewModelScope.launch {
             // Lắng nghe thay đổi dữ liệu mới nhất theo thời gian thực
@@ -44,9 +42,7 @@ class SensorViewModel(private val repository: SensorRepository) : ViewModel() {
         }
     }
 
-    /**
-     * Lấy dữ liệu 1 giờ gần nhất để tính trung bình
-     */
+    //Lấy dữ liệu 1 giờ gần nhất để tính trung bình
     private fun fetchHourlyAverage(latestReading: SensorReading) {
         repository.getReadingsInLastHour(
             onSuccess = { readings ->
@@ -56,15 +52,13 @@ class SensorViewModel(private val repository: SensorRepository) : ViewModel() {
             onError = { error ->
                 _errorMessage.value = "Error fetching hourly data: $error"
 
-                // Nếu không lấy được dữ liệu 1 giờ, vẫn hiển thị dữ liệu mới nhất
+                // vẫn gọi dù đã gọi để xử lí lỗi bên trong hàm calculateAverages
                 updateWithLatestOnly(latestReading)
             }
         )
     }
 
-    /**
-     * Cập nhật UI chỉ với dữ liệu mới nhất (khi không có dữ liệu 1 giờ)
-     */
+    //Cập nhật UI chỉ với dữ liệu mới nhất (khi không có dữ liệu 1 giờ)
     private fun updateWithLatestOnly(latestReading: SensorReading) {
         latestReading.temperature?.let { temp ->
             latestReading.humidity?.let { humid ->
@@ -78,15 +72,6 @@ class SensorViewModel(private val repository: SensorRepository) : ViewModel() {
         }
     }
 
-    /**
-     * Tính trung bình dữ liệu nhiệt độ và độ ẩm từ danh sách bản ghi trong 1 giờ
-     *
-     * Thuật toán:
-     * 1. Nếu không có dữ liệu, sử dụng dữ liệu mới nhất
-     * 2. Đối với mỗi bản ghi, cộng dồn giá trị nhiệt độ và độ ẩm
-     * 3. Tính trung bình bằng cách chia tổng cho số lượng bản ghi
-     * 4. Lọc bỏ các giá trị null hoặc không hợp lệ
-     */
     private fun calculateAverages(readings: List<SensorReading>, latestReading: SensorReading) {
         if (readings.isEmpty()) {
             // Không có dữ liệu trong 1 giờ -> sử dụng dữ liệu hiện tại
@@ -128,9 +113,7 @@ class SensorViewModel(private val repository: SensorRepository) : ViewModel() {
         }
     }
 
-    /**
-     * Dọn dẹp resource khi ViewModel bị hủy
-     */
+    // clean resources
     override fun onCleared() {
         super.onCleared()
         latestReadingListener?.let {

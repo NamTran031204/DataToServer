@@ -30,7 +30,7 @@ class FirebaseDataService {
         })
     }
 
-    // Lắng nghe dữ liệu mới nhất theo thời gian thực
+    // Lấy dữ liệu mới nhất theo thời gian thực
     fun listenForLatestReading(onNewData: (SensorReading?) -> Unit, onError: (String) -> Unit): ValueEventListener {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -53,16 +53,14 @@ class FirebaseDataService {
     // Lấy dữ liệu trong 1 giờ gần nhất
     fun getReadingsInLastHour(onSuccess: (List<SensorReading>) -> Unit, onError: (String) -> Unit) {
         try {
-            // Tính timestamp cho 1 giờ trước - sử dụng UTC để đảm bảo đồng nhất với timestamp từ ESP32
+            // UTC để đảm bảo đồng nhất với timestamp từ ESP32
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.add(Calendar.HOUR, -1) // Trừ đi 1 giờ từ thời gian hiện tại
 
-            // Định dạng thời gian theo chuẩn ISO 8601 (giống với định dạng từ ESP32)
             val oneHourAgo = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).apply {
                 timeZone = TimeZone.getTimeZone("UTC")
             }.format(calendar.time)
 
-            // Log để debug
             println("Fetching data from: $oneHourAgo")
 
             // Query Firebase: Lấy tất cả bản ghi có timestamp >= oneHourAgo
@@ -78,14 +76,12 @@ class FirebaseDataService {
                         snapshot.children.forEach { child ->
                             try {
                                 // Chuyển đổi dữ liệu JSON thành đối tượng SensorReading
-                                // và thêm ID của bản ghi (key trong Firebase)
                                 val reading = child.getValue(SensorReading::class.java)
                                 if (reading != null) {
                                     readings.add(reading.copy(id = child.key))
                                 }
                             } catch (e: Exception) {
                                 println("Error parsing reading: ${e.message}")
-                                // Bỏ qua bản ghi lỗi và tiếp tục xử lý các bản ghi khác
                             }
                         }
 
